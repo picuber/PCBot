@@ -8,5 +8,8 @@
         "client_id": "304726073130745858",
         "token": "MzA0NzI2MDczMTMwNzQ1ODU4.C9q3Sg.CoWLbpV0oan9ree96qgTsRuBJD4",
         "username": "PCBot#1041"
-    }
+    },
+	"setup": {
+		"prefix": [",", "."]
+	}
 }
