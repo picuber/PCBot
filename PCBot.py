@@ -25,9 +25,9 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    print('blah')
     if message.author.bot:
         return
+    print('Message from ' + message.autor.name + ' (' + message.author.id + ')')
     try:
         await bot.process_commands(message)
     except MissingRequiredArgument:
@@ -36,7 +36,11 @@ async def on_message(message):
 @bot.event
 async def on_error(event, *args, **kwargs):
     #TODO
-    return
+	try:
+		pass
+	except MissingRequiredArgumend:
+		print('ERROR caught')
+	return
 
 #-----Commands-----
 number_to_guess = random.randint(config['guess']['min'], config['guess']['max'])
