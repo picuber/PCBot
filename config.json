@@ -3,6 +3,10 @@
         "min": 0,
         "max": 99
     },
+    "guessfloat": {
+        "min": 0,
+        "max": 99
+    },
     "bot": {
         "client_secret": "fiInzUEmVB1o_eVBNItMgCsKXO4skLzH",
         "client_id": "304726073130745858",

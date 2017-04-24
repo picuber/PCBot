@@ -13,43 +13,73 @@ def store_config(config):
     with open('config.json','w') as f:
         json.dump(config, f)
 
+def load_objects():
+    with open('throw_objects.txt') as f:
+        return [l.strip() for l in f]
+
+async def get_appinfo():
+    return await bot.application_info()
+
 config = load_config()
 bot = commands.Bot(command_prefix=config['setup']['prefix'])
+objects = []
 
 #-----Helper-----
-def caller_is_bot_owner():
+def owner_only():
     def predicate(ctx):
-        #TODO 
-        print(str(bot.AppInfo.owner.id))
-        print(str(ctx.message.author.id))
-        return discord.AppInfo.owner == ctx.message.author
+        return ctx.message.author.id == '223037287179616266'
     return commands.check(predicate)
-#-----Commands-----
-@bot.command(hidden=True)
-@caller_is_bot_owner()
-async def invitelink():
-    await bot.say('https://discordapp.com/api/oauth2/authorize?client_id=' + bot.user.id + '&scope=bot&permissions=0')
 
-@bot.command(hidden=True)
-@caller_is_bot_owner()
+#-----Commands-----
+@bot.command(hidden=True, aliases=['invite'])
+@owner_only()
+async def invitelink():
+    await bot.say(discord.utils.oauth_url(bot.user.i))
+
+@bot.command(hidden=True, aliases=['reload'])
+@owner_only()
 async def reloadconfig():
     config = load_config()
 
-number_to_guess = random.randint(config['guess']['min'], config['guess']['max'])
-@bot.command(help='Guess the correct number', aliases=['g'])
-async def guess(number=''):
-    global number_to_guess
-    try:
-        int(number)
-    except ValueError:
-        number = config['guess']['min']-1
+@bot.command(hidden=True, aliases=['debug'])
+@owner_only()
+async def printdebug():
+    await bot.say(objects)
 
-    if number > config['guess']['max'] or number < config['guess']['min']:
-        await bot.say("Choose a number between " + str(config['guess']['min']) + " and " + str(config['guess']['max']) + "!")
-    elif number == number_to_guess:
+integer_to_guess = random.randint(config['guess']['min'], config['guess']['max'])
+@bot.command(help='Guess the correct integer', aliases=['g'])
+async def guess(integer=''):
+    global integer_to_guess
+    try:
+        int(integer)
+    except ValueError:
+        integer = config['guess']['min']-1
+
+    if integer > config['guess']['max'] or number < config['guess']['min']:
+        await bot.say("Choose an integer between " + str(config['guess']['min']) + " and " + str(config['guess']['max']) + "!")
+    elif integer == number_to_guess:
         await bot.say("Correct!")
-        number_to_guess = random.randint(config['guess']['min'], config['guess']['max'])
-    elif number < number_to_guess:
+        integer_to_guess = random.randint(config['guess']['min'], config['guess']['max'])
+    elif integer < number_to_guess:
+        await bot.say("Too small!")
+    else:
+        await bot.say("Too big!")
+
+decimal_to_guess = random.random() * config['guessfloat']['max'] + config['guessfloat']['min']
+@bot.command(help='Guess the correct decimal', aliases=['gf', 'guessf', 'gfloat'])
+async def guessfloat(decimal=''):
+    global decimal_to_guess
+    try:
+        float(decimal)
+    except ValueError:
+        decimal = config['guessfloat']['min']-1
+
+    if decimal > config['guessfloat']['max'] or number < config['guessfloat']['min']:
+        await bot.say("Choose an decimal between " + str(config['guessfloat']['min']) + " and " + str(config['guessfloat']['max']) + "!")
+    elif decimal == number_to_guess:
+        await bot.say("Correct!")
+        decimal_to_guess = random.random() * config['guessfloat']['max'] + config['guessfloat']['min']
+    elif decimal < number_to_guess:
         await bot.say("Too small!")
     else:
         await bot.say("Too big!")
@@ -91,6 +121,19 @@ async def roll(*, dice_string: str='d'):
 async def roll_errorhandler(error, ctx):
     await bot.say('Please enter a dice roll')
 
+@bot.command(help='In memmory of RoboNitori', pass_context=True)
+async def throw(ctx):
+    global objects
+    if objects == []:
+        objects = load_objects()
+    if ctx.message.mentions == []:
+        user = ctx.message.author
+    else:
+        user = ctx.message.mentions[0]
+    await bot.say('*throws ' + random.choice(objects) + ' at* '
+            + user.mention)
+
+
 #-----Main-----
 @bot.event
 async def on_ready():
@@ -105,7 +148,8 @@ async def on_message(message):
     print('Message from ' + message.author.name + ' (' + message.author.id + '): ' + message.content)
     try:
         await bot.process_commands(message)
-    except MissingRequiredArgument:
+    except commands.errors.MissingRequiredArgument:
         await bot.say("You forgot an argument!")
 
-bot.run(config['bot']['token'])
+if __name__ == '__main__':
+    bot.run(config['bot']['token'])
