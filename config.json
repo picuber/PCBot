@@ -5,7 +5,7 @@
     },
     "guessfloat": {
         "min": 0,
-        "max": 99
+        "max": 10
     },
     "bot": {
         "client_secret": "fiInzUEmVB1o_eVBNItMgCsKXO4skLzH",

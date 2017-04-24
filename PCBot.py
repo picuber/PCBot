@@ -34,7 +34,7 @@ def owner_only():
 @bot.command(hidden=True, aliases=['invite'])
 @owner_only()
 async def invitelink():
-    await bot.say(discord.utils.oauth_url(bot.user.i))
+    await bot.say(discord.utils.oauth_url(bot.user.id))
 
 @bot.command(hidden=True, aliases=['reload'])
 @owner_only()
@@ -44,23 +44,23 @@ async def reloadconfig():
 @bot.command(hidden=True, aliases=['debug'])
 @owner_only()
 async def printdebug():
-    await bot.say(objects)
+    print('Currently no debugmessage available')
 
 integer_to_guess = random.randint(config['guess']['min'], config['guess']['max'])
 @bot.command(help='Guess the correct integer', aliases=['g'])
 async def guess(integer=''):
     global integer_to_guess
     try:
-        int(integer)
+        integer = int(integer)
     except ValueError:
         integer = config['guess']['min']-1
 
-    if integer > config['guess']['max'] or number < config['guess']['min']:
+    if integer > config['guess']['max'] or integer < config['guess']['min']:
         await bot.say("Choose an integer between " + str(config['guess']['min']) + " and " + str(config['guess']['max']) + "!")
-    elif integer == number_to_guess:
+    elif integer == integer_to_guess:
         await bot.say("Correct!")
         integer_to_guess = random.randint(config['guess']['min'], config['guess']['max'])
-    elif integer < number_to_guess:
+    elif integer < integer_to_guess:
         await bot.say("Too small!")
     else:
         await bot.say("Too big!")
@@ -70,16 +70,16 @@ decimal_to_guess = random.random() * config['guessfloat']['max'] + config['guess
 async def guessfloat(decimal=''):
     global decimal_to_guess
     try:
-        float(decimal)
+        decimal = float(decimal)
     except ValueError:
         decimal = config['guessfloat']['min']-1
 
-    if decimal > config['guessfloat']['max'] or number < config['guessfloat']['min']:
+    if decimal > config['guessfloat']['max'] or decimal < config['guessfloat']['min']:
         await bot.say("Choose an decimal between " + str(config['guessfloat']['min']) + " and " + str(config['guessfloat']['max']) + "!")
-    elif decimal == number_to_guess:
+    elif decimal == decimal_to_guess:
         await bot.say("Correct!")
         decimal_to_guess = random.random() * config['guessfloat']['max'] + config['guessfloat']['min']
-    elif decimal < number_to_guess:
+    elif decimal < decimal_to_guess:
         await bot.say("Too small!")
     else:
         await bot.say("Too big!")
