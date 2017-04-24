@@ -46,6 +46,11 @@ async def reloadconfig():
 async def printdebug():
     print('Currently no debugmessage available')
 
+@bot.command(hidden=True, aliases=['exit', 'kill'])
+@owner_only()
+async def killbot():
+    exit()
+
 integer_to_guess = random.randint(config['guess']['min'], config['guess']['max'])
 @bot.command(help='Guess the correct integer', aliases=['g'])
 async def guess(integer=''):
