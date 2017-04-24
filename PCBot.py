@@ -145,7 +145,10 @@ async def on_ready():
 async def on_message(message):
     if message.author.bot:
         return
-    print('Message from ' + message.author.name + ' (' + message.author.id + '): ' + message.content)
+    if message.channel.is_private:
+        print('Message from ' + message.author.name + ' (' + message.author.id + '): ' + message.content)
+    else:
+        print('Message in ' + message.server.name + '/#' + message.channel.name + ' from ' + message.author.name + ' (' + message.author.id + '): ' + message.content)
     try:
         await bot.process_commands(message)
     except commands.errors.MissingRequiredArgument:
