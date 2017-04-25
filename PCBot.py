@@ -143,6 +143,11 @@ async def throw(ctx):
 async def unixtime():
 	await bot.say(int(time.time()))
 
+@bot.command(help='Let me choose for you\nPlease enter your choices seperated by |', aliases=['c', 'choice'])
+async def choose(*, choices: str='Please enter your choices'):
+    await bot.say(random.choice(choices.split('|')))
+
+
 #-----Main-----
 @bot.event
 async def on_ready():
