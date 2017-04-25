@@ -4,6 +4,7 @@ import random
 import json
 import logging
 import asyncio
+import time
 
 def load_config():
     with open('config.json') as f:
@@ -138,6 +139,9 @@ async def throw(ctx):
     await bot.say('*throws ' + random.choice(objects) + ' at* '
             + user.mention)
 
+@bot.command(help='Get current unix time', aliases=['time', 'unix'])
+async def unixtime():
+	await bot.say(int(time.time()))
 
 #-----Main-----
 @bot.event
