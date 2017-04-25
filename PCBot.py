@@ -1,3 +1,5 @@
+#TODO Gamble games like roulette, slots, etc.
+#TODO money system
 import discord
 from discord.ext import commands
 import random
