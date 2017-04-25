@@ -139,7 +139,7 @@ async def throw(ctx):
     await bot.say('*throws ' + random.choice(objects) + ' at* '
             + user.mention)
 
-@bot.command(help='Get current unix time', aliases=['time', 'unix'])
+@bot.command(help='Get current unix time', aliases=['time', 'unix', 't', 'u'])
 async def unixtime():
 	await bot.say(int(time.time()))
 
