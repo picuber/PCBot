@@ -20,12 +20,21 @@ def load_objects():
     with open('throw_objects.txt') as f:
         return [l.strip() for l in f]
 
+def load_bank():
+    with open('bank.json') as f:
+            return json.load(f)
+
+def store_bank(bank):
+    with open('bank.json', 'w') as f:
+        json.dump(bank, f)
+
 async def get_appinfo():
     return await bot.application_info()
 
 config = load_config()
 bot = commands.Bot(command_prefix=config['setup']['prefix'])
 objects = []
+bank = load_bank()
 
 #-----Helper-----
 def owner_only():
@@ -150,14 +159,19 @@ async def choose(*, choices: str='Please enter your choices'):
     await bot.say(random.choice(choices.split('|')))
 
 #-----Credits-----
-@bot.group(help='For all your financial needs', aliases=['m', 'credits',  'cr'], pass_context=True)
-async def money(ctx):
+@bot.group(help='For all your financial needs', aliases=['m', 'money', 'credits',  'cr', 'b', 'bank'], pass_context=True)
+async def banking(ctx):
+    # await bot.say('How can I help you?')
     pass
 
-@money.command(help='Check your credit card :credit_card:', aliases=['bal', 'b'])
+@banking.command(help='Check your credit card :credit_card:', aliases=['bal', 'b'], pass_context=True)
 async def balance(ctx):
-    await bot.say('test')
-
+    uid = ctx.message.author.id 
+    if not uid in list(bank['balance'].keys()):
+        bank['balance'][uid] = 0
+        store_bank(bank)
+    await bot.say(bank['balance'][uid])
+        
 #-----Main-----
 @bot.event
 async def on_ready():
