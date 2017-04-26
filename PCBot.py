@@ -149,6 +149,14 @@ async def unixtime():
 async def choose(*, choices: str='Please enter your choices'):
     await bot.say(random.choice(choices.split('|')))
 
+#-----Credits-----
+@bot.group(help='For all your financial needs', aliases=['m', 'credits',  'cr'], pass_context=True)
+async def money(ctx):
+    pass
+
+@money.command(help='Check your credit card :credit_card:', aliases=['bal', 'b'])
+async def balance(ctx):
+    await bot.say('test')
 
 #-----Main-----
 @bot.event
