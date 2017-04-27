@@ -43,17 +43,17 @@ def owner_only():
     return commands.check(predicate)
 
 #-----Commands-----
-@bot.command(hidden=True, aliases=['invite'])
+@bot.command(help='Bring PCBot to ***your*** guild', hidden=True, aliases=['invite'])
 @owner_only()
 async def invitelink():
     await bot.say(discord.utils.oauth_url(bot.user.id))
 
-@bot.command(hidden=True, aliases=['reload'])
+@bot.command(help='Reload the configuration file', hidden=True, aliases=['reload'])
 @owner_only()
 async def reloadconfig():
     config = load_config()
 
-@bot.command(hidden=True, aliases=['debug'])
+@bot.command(help='Print the current test to the console', hidden=True, aliases=['debug'])
 @owner_only()
 async def printdebug():
     print('Currently no debugmessage available')
@@ -158,7 +158,7 @@ async def unixtime():
 async def choose(*, choices: str='Please enter your choices'):
     await bot.say(random.choice(choices.split('|')))
 
-#-----Credits-----
+#-----Banking-----
 @bot.group(help='For all your financial needs', aliases=['m', 'money', 'credits',  'cr', 'b', 'bank'], pass_context=True)
 async def banking(ctx):
     # await bot.say('How can I help you?')
@@ -166,12 +166,34 @@ async def banking(ctx):
 
 @banking.command(help='Check your credit card :credit_card:', aliases=['bal', 'b'], pass_context=True)
 async def balance(ctx):
-    uid = ctx.message.author.id 
-    if not uid in list(bank['balance'].keys()):
-        bank['balance'][uid] = 0
+    user = ctx.message.author
+    if not user.id in list(bank['balance'].keys()):
+        bank['balance'][user.id] = 0
         store_bank(bank)
-    await bot.say(bank['balance'][uid])
-        
+    await bot.say(user.mention + '\'s balance: ' + str(bank['balance'][user.id]) + ':dollar:')
+
+@banking.command(hidden=True, aliases=['setbal', 'sb'], pass_context=True)
+@owner_only()
+async def setbalance(ctx, new_balance: int):
+    if ctx.message.mentions == []:
+        user = ctx.message.author
+    else:
+        user = ctx.message.mentions[0]
+    bank['balance'][user.id] = new_balance
+    store_bank(bank)
+    await bot.say(user.mention + ' your balance has been set to ' + str(bank['balance'][user.id]) + ':dollar:')
+    
+@banking.command(hidden=True, aliases=['addbal', 'ab'], pass_context=True)
+@owner_only()
+async def addbalance(ctx, new_balance: int):
+    if ctx.message.mentions == []:
+        user = ctx.message.author
+    else:
+        user = ctx.message.mentions[0]
+    bank['balance'][user.id] += new_balance
+    store_bank(bank)
+    await bot.say(str(bank['balance'][user.id]) + ':dollar: has been added to ' + user.mention + '\'s balance')
+
 #-----Main-----
 @bot.event
 async def on_ready():
