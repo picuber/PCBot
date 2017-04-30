@@ -206,9 +206,9 @@ async def on_message(message):
     if message.author.bot:
         return
     if message.channel.is_private:
-        print('Message from ' + message.author.name + ' (' + message.author.id + '): ' + message.content)
+        print('Message from ' + message.author.name + ' (' + message.author.id + ')' + ('[tts]' if message.tts else '') + ': ' + message.content)
     else:
-        print('Message in ' + message.server.name + '/#' + message.channel.name + ' from ' + message.author.name + ' (' + message.author.id + '): ' + message.content)
+        print('Message in ' + message.server.name + '/#' + message.channel.name + ' from ' + message.author.name + ' (' + message.author.id + ')' + ('[tts]' if message.tts else '') + ': ' + message.content)
     try:
         await bot.process_commands(message)
     except commands.errors.MissingRequiredArgument:
