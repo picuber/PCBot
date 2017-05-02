@@ -1,4 +1,4 @@
-#TODO Gamble games like roulette, slots, etc.
+#TODO Gamble games like roulette, slots, dice, flip, etc.
 #TODO money system
 import discord
 from discord.ext import commands
