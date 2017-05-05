@@ -1,4 +1,4 @@
-#TODO Gamble games like roulette, slots, dice, flip, etc.
+#TODO Gamble games like roulette, slots, dice, flip, blackjack, etc.
 #TODO money system
 import discord
 from discord.ext import commands
@@ -20,13 +20,13 @@ def load_objects():
     with open('throw_objects.txt') as f:
         return [l.strip() for l in f]
 
-def load_bank():
-    with open('bank.json') as f:
+def load_casino():
+    with open('casino.json') as f:
             return json.load(f)
 
-def store_bank(bank):
-    with open('bank.json', 'w') as f:
-        json.dump(bank, f)
+def store_casino(casino_dict):
+    with open('casino.json', 'w') as f:
+        json.dump(casino_dict, f)
 
 async def get_appinfo():
     return await bot.application_info()
@@ -34,7 +34,8 @@ async def get_appinfo():
 config = load_config()
 bot = commands.Bot(command_prefix=config['setup']['prefix'])
 objects = []
-bank = load_bank()
+casino_dict = load_casino()
+debug_string = ''
 
 #-----Helper-----
 def owner_only():
@@ -56,7 +57,10 @@ async def reloadconfig():
 @bot.command(help='Print the current test to the console', hidden=True, aliases=['debug'])
 @owner_only()
 async def printdebug():
-    print('Currently no debugmessage available')
+    if not debug_string:
+        print('Currently no debugmessage available')
+    else:
+        print(debug_string)
 
 @bot.command(hidden=True, aliases=['exit', 'kill'])
 @owner_only()
@@ -154,45 +158,69 @@ async def throw(ctx):
 async def unixtime():
 	await bot.say(int(time.time()))
 
-@bot.command(help='Let me choose for you\nPlease enter your choices seperated by |', aliases=['c', 'choice'])
+@bot.command(help='Let me choose for you\nPlease enter your choices seperated by |', aliases=['ch', 'choice'])
 async def choose(*, choices: str='Please enter your choices'):
     await bot.say(random.choice(choices.split('|')))
 
-#-----Banking-----
-@bot.group(help='For all your financial needs', aliases=['m', 'money', 'credits',  'cr', 'b', 'bank'], pass_context=True)
-async def banking(ctx):
-    # await bot.say('How can I help you?')
-    pass
+#-----Casino-----
+@bot.group(help='For all your financial needs', aliases=['c', 'cas', 'b', 'bank'], pass_context=True)
+async def casino(ctx):
+    if ctx.invoked_subcommand is None:
+        await bot.say('How can I help you?')
 
-@banking.command(help='Check your credit card :credit_card:', aliases=['bal', 'b'], pass_context=True)
+@casino.command(help='Check your credit card :credit_card:', aliases=['bal', 'b'], pass_context=True)
 async def balance(ctx):
     user = ctx.message.author
-    if not user.id in list(bank['balance'].keys()):
-        bank['balance'][user.id] = 0
-        store_bank(bank)
-    await bot.say(user.mention + '\'s balance: ' + str(bank['balance'][user.id]) + ':dollar:')
+    if not user.id in list(casino_dict['bank'].keys()):
+        casino_dict['bank'][user.id] = 0
+        store_casino(casino_dict)
+    await bot.say(user.mention + '\'s balance: ' + str(casino_dict['bank'][user.id]) + ':dollar:')
 
-@banking.command(hidden=True, aliases=['setbal', 'sb'], pass_context=True)
+@casino.command(hidden=True, aliases=['setbal', 'sb'], pass_context=True)
 @owner_only()
 async def setbalance(ctx, new_balance: int):
     if ctx.message.mentions == []:
         user = ctx.message.author
     else:
         user = ctx.message.mentions[0]
-    bank['balance'][user.id] = new_balance
-    store_bank(bank)
-    await bot.say(user.mention + ' your balance has been set to ' + str(bank['balance'][user.id]) + ':dollar:')
+    casino_dict['bank'][user.id] = new_balance
+    store_casino(casino_dict)
+    await bot.say(user.mention + ' your balance has been set to ' + str(casino_dict['bank'][user.id]) + ':dollar:')
     
-@banking.command(hidden=True, aliases=['addbal', 'ab'], pass_context=True)
+@casino.command(hidden=True, aliases=['addbal', 'ab'], pass_context=True)
 @owner_only()
 async def addbalance(ctx, new_balance: int):
     if ctx.message.mentions == []:
         user = ctx.message.author
     else:
         user = ctx.message.mentions[0]
-    bank['balance'][user.id] += new_balance
-    store_bank(bank)
-    await bot.say(str(bank['balance'][user.id]) + ':dollar: has been added to ' + user.mention + '\'s balance')
+    casino_dict['bank'][user.id] += new_balance
+    store_casino(casino_dict)
+    await bot.say(str(casino_dict['bank'][user.id]) + ':dollar: has been added to ' + user.mention + '\'s balance')
+
+@casino.group(help='Let\'s play Balack Jack!', aliases=['bj', 'blackj', 'bjack'], pass_context=True)
+async def blackjack(ctx):
+    if ctx.invoked_subcommand.name == 'blackjack':
+        await bot.say('Welcome to the Black Jack Table! How can I help you?')
+
+# @blackjack.command(pass_context=True)
+# async def test(ctx):
+#     pass
+# async def join(cxt):
+#     pass
+# async def start(ctx):
+#     pass
+# async def setpot(ctx):
+#     pass
+# @owner_only
+# async def kick(ctx):
+#     pass
+# async def hit(ctx):
+#     pass
+# async def stand(ctx):
+#     pass
+
+
 
 #-----Main-----
 @bot.event
