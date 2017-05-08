@@ -163,7 +163,7 @@ async def choose(*, choices: str='Please enter your choices'):
     await bot.say(random.choice(choices.split('|')))
 
 #-----Casino-----
-@bot.group(help='For all your financial needs', aliases=['c', 'cas', 'b', 'bank'], pass_context=True)
+@bot.group(help='Can you win the jackpot?', aliases=['c', 'cas', 'b', 'bank'], pass_context=True)
 async def casino(ctx):
     if ctx.invoked_subcommand is None:
         await bot.say('How can I help you?')
@@ -198,10 +198,10 @@ async def addbalance(ctx, new_balance: int):
     store_casino(casino_dict)
     await bot.say(str(casino_dict['bank'][user.id]) + ':dollar: has been added to ' + user.mention + '\'s balance')
 
-@casino.group(help='Let\'s play Balack Jack!', aliases=['bj', 'blackj', 'bjack'], pass_context=True)
-async def blackjack(ctx):
-    if ctx.invoked_subcommand.name == 'blackjack':
-        await bot.say('Welcome to the Black Jack Table! How can I help you?')
+# @casino.group(help='Let\'s play Balack Jack!', aliases=['bj', 'blackj', 'bjack'], pass_context=True)
+# async def blackjack(ctx):
+#     if ctx.invoked_subcommand.name == 'blackjack':
+#         await bot.say('Welcome to the Black Jack Table! How can I help you?')
 
 # @blackjack.command(pass_context=True)
 # async def test(ctx):
