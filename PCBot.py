@@ -38,6 +38,15 @@ casino_dict = load_casino()
 debug_string = ''
 
 #-----Helper-----
+def toBase(n, b):
+    if n == 0:
+        return [0]
+    digits = []
+    while n:
+        digits.append(int(n % b))
+        n //= b
+    return digits[::-1]
+
 def owner_only():
     def predicate(ctx):
         return ctx.message.author.id == '223037287179616266'
@@ -154,13 +163,37 @@ async def throw(ctx):
     await bot.say('*throws ' + random.choice(objects) + ' at* '
             + user.mention)
 
-@bot.command(help='Get current unix time', aliases=['time', 'unix', 't', 'u'])
-async def unixtime():
-	await bot.say(int(time.time()))
-
 @bot.command(help='Let me choose for you\nPlease enter your choices seperated by |', aliases=['ch', 'choice'])
 async def choose(*, choices: str='Please enter your choices'):
     await bot.say(random.choice(choices.split('|')))
+
+#-----Time-----
+@bot.group(help='Come get your Time now. It\'s fresh!', aliases=['time', 't', 'clk'], pass_context=True)
+async def clock(ctx):
+    if ctx.invoked_subcommand is None:
+        await bot.say('What time do you want?')
+
+@clock.command(help='Get current unix time', aliases=['u'])
+async def unix():
+    await bot.say(int(time.time()))
+
+@clock.command(help='Get current unix time', aliases=['custt', 'ctime', 'ct'])
+async def customtime():
+    t = int(time.time() + time.localtime().tm_gmtoff) % 86400
+    
+    s_str = ''
+    for i in toBase(t % 25, 5):
+        s_str += str(i)
+    t //= 25
+
+    m_str = ''
+    for i in toBase(t % 27, 6):
+        m_str += str(i)
+    t //= 27
+
+    h_str = hex(t).upper()[2:]
+
+    await bot.say(h_str + '-' + m_str+ '-' + s_str)
 
 #-----Casino-----
 @bot.group(help='Can you win the jackpot?', aliases=['c', 'cas', 'b', 'bank'], pass_context=True)
