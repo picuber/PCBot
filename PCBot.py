@@ -6,7 +6,7 @@ import random
 import json
 import logging
 import asyncio
-import time
+import time as sys_time
 
 def load_config():
     with open('config.json') as f:
@@ -168,18 +168,18 @@ async def choose(*, choices: str='Please enter your choices'):
     await bot.say(random.choice(choices.split('|')))
 
 #-----Time-----
-@bot.group(help='Come get your Time now. It\'s fresh!', aliases=['time', 't', 'clk'], pass_context=True)
-async def clock(ctx):
+@bot.group(help='Come get your Time now. It\'s fresh!', aliases=['t', 'clk', 'clock'], pass_context=True)
+async def time(ctx):
     if ctx.invoked_subcommand is None:
         await bot.say('What time do you want?')
 
-@clock.command(help='Get current unix time', aliases=['u'])
+@time.command(help='Get current unix time', aliases=['u'])
 async def unix():
-    await bot.say(int(time.time()))
+    await bot.say(int(sys_time.time()))
 
-@clock.command(help='Get current unix time', aliases=['custt', 'ctime', 'ct'])
-async def customtime():
-    t = int(time.time() + time.localtime().tm_gmtoff) % 86400
+@time.command(help='Leo\'s custom time system', aliases=['t', 'time', 'lt'])
+async def lcts():
+    t = int(sys_time.time() + sys_time.localtime().tm_gmtoff) % 86400
     
     s_str = ''
     for i in toBase(t % 25, 5):
@@ -194,6 +194,10 @@ async def customtime():
     h_str = hex(t).upper()[2:]
 
     await bot.say(h_str + '-' + m_str+ '-' + s_str)
+
+@time.command(help='Standard boring time system', aliases=['st', 'standardtime'])
+async def stbs():
+    await bot.say(time.strftime('%H:%M:%S'))
 
 #-----Casino-----
 @bot.group(help='Can you win the jackpot?', aliases=['c', 'cas', 'b', 'bank'], pass_context=True)
@@ -258,6 +262,7 @@ async def addbalance(ctx, new_balance: int):
 #-----Main-----
 @bot.event
 async def on_ready():
+    await bot.change_presence(game=discord.Game(name=',help'))
     print('Logged in as ' + bot.user.name)
     print(bot.user.id)
     print('----------')
