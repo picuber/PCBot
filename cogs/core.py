@@ -41,6 +41,8 @@ class Core:
     @is_owner()
     async def unload(self, *, module : str):
         module = module.lower()
+        if module == 'cogs.core':
+            await selyf.bot.say('You can\'t take my heart! I only have two!!')
         if self.bot.extensions.get(module) is None:
             await self.bot.say('I don\'t have that. You can\'t take things from me I don\'t have')
             return
