@@ -33,7 +33,7 @@ class Time():
 
         await self.bot.say(h_str + '-' + m_str+ '-' + s_str)
 
-    @time.command(help='You wan\'t that awesome LCTS for your desktop? There you go!')
+    @time.command(help='You want that awesome LCTS for your desktop? There you go!')
     async def get_lcts(self):
         await self.bot.say('Have fun: https://github.com/picuber/LCTS-Clock/releases')
 
