@@ -5,3 +5,6 @@ __pycache__/
 
 # Rope project settings
 .ropeproject
+
+#Logs
+*.log

@@ -28,9 +28,6 @@ def store_casino(casino_dict):
     with open('casino.json', 'w') as f:
         json.dump(casino_dict, f)
 
-async def get_appinfo():
-    return await bot.application_info()
-
 config = load_config()
 bot = commands.Bot(command_prefix=config['setup']['prefix'])
 objects = []
@@ -197,7 +194,7 @@ async def lcts():
 
 @time.command(help='Standard boring time system', aliases=['st', 'standardtime'])
 async def stbs():
-    await bot.say(time.strftime('%H:%M:%S'))
+    await bot.say(sys_time.strftime('%H:%M:%S'))
 
 #-----Casino-----
 @bot.group(help='Can you win the jackpot?', aliases=['c', 'cas', 'b', 'bank'], pass_context=True)

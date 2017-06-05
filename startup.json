@@ -1,0 +1,14 @@
+{
+	"prefix": [",", ".", "<", ">"], 
+	"help_attrs": {
+		"aliases": ["h"],
+		"hidden": true
+	}, 
+	"cogs": [
+		"cogs.casino",
+		"cogs.time",
+		"cogs.random",
+		"cogs.guess",
+		"cogs.core"
+	]
+}
