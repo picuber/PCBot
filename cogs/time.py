@@ -33,7 +33,12 @@ class Time():
 
         await self.bot.say(h_str + '-' + m_str+ '-' + s_str)
 
+    @time.command(help='You wan\'t that awesome LCTS for your desktop? There you go!')
+    async def get_lcts(self):
+        pass
+
     @time.command(help='Standard boring time system', aliases=['st', 'standardtime'])
+    @commands.cooldown(1, 300)
     async def sbts(self):
         await self.bot.say(sys_time.strftime('%H:%M:%S'))
 
