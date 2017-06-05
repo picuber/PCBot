@@ -35,7 +35,7 @@ class Time():
 
     @time.command(help='You wan\'t that awesome LCTS for your desktop? There you go!')
     async def get_lcts(self):
-        pass
+        await self.bot.say('Have fun: https://github.com/picuber/LCTS-Clock/releases')
 
     @time.command(help='Standard boring time system', aliases=['st', 'standardtime'])
     @commands.cooldown(1, 300)
