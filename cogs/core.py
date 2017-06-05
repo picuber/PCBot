@@ -1,4 +1,5 @@
 from discord.ext import commands
+import discord
 from cogs.utils.checks import is_owner
 
 class Core:
@@ -16,6 +17,40 @@ class Core:
         print('Killing PCBot...')
         await self.bot.say('Good bye cruel world!')
         exit()
+
+    @commands.command(help='Load a module', hidden=True)
+    @is_owner()
+    async def load(self, *, module : str):
+        module = module.lower()
+        if module in self.bot.extensions:
+            await self.bot.say(module + ' already loaded')
+            return
+        try:
+            self.bot.load_extension(module)
+        except discord.ClientException as e:
+            await self.bot.say('Thats not a module!')
+        except ImportError as e:
+            await self.bot.say('Ew! What\'s that?? I don\'t know that! Get that away from me!')
+        except Exception as e:
+            await self.bot.say(module + ' could not be loaded')
+            print('{}: {}'.format(type(e).__name__, e))
+        else:
+            await self.bot.say(module + ' successfully loaded')
+
+    @commands.command(help='Unload a module', hidden=True)
+    @is_owner()
+    async def unload(self, *, module : str):
+        module = module.lower()
+        if self.bot.extensions.get(module) is None:
+            await self.bot.say('I don\'t have that. You can\'t take things from me I don\'t have')
+            return
+        try:
+            self.bot.unload_extension(module)
+        except Exception as e:
+            await self.bot.say(module + ' could not be unloaded')
+            print('{}: {}'.format(type(e).__name__, e))
+        else:
+            await self.bot.say(module + ' successfully unloaded')
 
     @commands.command(pass_context=True, hidden=True)
     @is_owner()

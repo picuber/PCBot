@@ -57,7 +57,10 @@ class Random:
 
     @commands.command(help='Let me choose for you\nPlease enter your choices seperated by |', aliases=['ch', 'choice'])
     async def choose(self, *, choices: str='Please enter your choices'):
-        await self.bot.say(random.choice(choices.split('|')))
+        result = random.choice(choices.split('|'))
+        if result == '':
+            result = '<empty choice>'
+        await self.bot.say(result)
 
 
 def setup(bot):
