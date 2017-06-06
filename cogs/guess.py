@@ -37,7 +37,7 @@ class Guess:
 
     @guess.command(hidden=True, help='reload the numbers', aliases=['r', 'rld'])
     async def reload(self):
-        reload_numbers(self)
+        self.reload_numbers()
         await self.bot.say('Fresh numbers coming right in!')
 
     @guess.command(help='Guess the correct integer', aliases=['i', 'int'])
