@@ -28,11 +28,11 @@ async def on_command_error(error, ctx):
         await bot.send_message(ctx.message.channel, 'Sorry. This command is disabled and cannot be used.')
     elif isinstance(error, commands.CommandInvokeError):
         print('In {0.command.qualified_name}:'.format(ctx), file=sys.stderr, end='')
-        print('{0.__class__.__name__}: {0}'.format(error.original), file=sys.stderr)
+        print('{0.__class__.__name__}: {0}'.format(error), file=sys.stderr)
     elif isinstance(error, commands.CommandOnCooldown):
         await bot.send_message(ctx.message.channel, error)
     else:
-        print('{0.__class__.__name__}: {0}'.format(error.original), file=sys.stderr)
+        print('{0.__class__.__name__}: {0}'.format(error), file=sys.stderr)
 
 
 @bot.event
