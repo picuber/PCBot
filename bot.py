@@ -22,15 +22,20 @@ bot = commands.Bot(command_prefix=startup['prefix'], help_attr=startup['help_att
 
 @bot.event
 async def on_command_error(error, ctx):
-    if isinstance(error, commands.NoPrivateMessage):
-        await bot.send_message(ctx.message.channel, 'This command cannot be used in private messages.')
+    chan = ctx.message.channel
+    if isinstance(error, commands.MissingRequiredArgument):
+        await bot.send_message(chan, 'You forgot at least one argument!')
+    elif isinstance(error, commands.CommandOnCooldown):
+        await bot.send_message(chan, error)
+    elif isinstance(error, commands.CheckFailure):
+        await bot.send_message(chan, 'YOU SHALL NOT PASS!')
+    elif isinstance(error, commands.NoPrivateMessage):
+        await bot.send_message(chan, 'This command cannot be used in private messages.')
     elif isinstance(error, commands.DisabledCommand):
-        await bot.send_message(ctx.message.channel, 'Sorry. This command is disabled and cannot be used.')
+        await bot.send_message(chan, 'Sorry. This command is disabled and cannot be used.')
     elif isinstance(error, commands.CommandInvokeError):
         print('In {0.command.qualified_name}:'.format(ctx), file=sys.stderr, end='')
         print('{0.__class__.__name__}: {0}'.format(error), file=sys.stderr)
-    elif isinstance(error, commands.CommandOnCooldown):
-        await bot.send_message(ctx.message.channel, error)
     else:
         print('{0.__class__.__name__}: {0}'.format(error), file=sys.stderr)
 
