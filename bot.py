@@ -11,7 +11,7 @@ logging.basicConfig(
         filename='PCBot.log',
         filemode='a',
         format='%(asctime)s [%(levelname)s]-%(name)s: %(message)s',
-        dateformat='%Y-%m-%d %H:%M:%S')
+        datefmt='%Y-%m-%d %H:%M:%S')
 logging.getLogger('discord').setLevel(logging.WARNING)
 log = logging.getLogger('PCBot')
 
