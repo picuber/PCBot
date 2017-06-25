@@ -139,7 +139,7 @@ class Casino:
         self._cdb.set_bet(user.id, bet)
         await self.bot.say('Your bet has been set to {}:dollar: {}'.format(self._cdb.get_bet(user.id), user.mention))
 
-    rps_conditions = {
+    rps_conditions = {#(choice1, choice2) : choice1 wins?
             ('r', 'p') : False,
             ('r', 's') : True,
             ('p', 'r') : True,
@@ -147,22 +147,22 @@ class Casino:
             ('s', 'r') : False,
             ('s', 'p') : True
         }
-    @casino.command(help='Can you win against me?', aliases=['rps'], pass_context=True)
+    @casino.command(help='Can you win against me?', aliases=['rps', 'rockspaperscissors', 'rockpaperandscissors', 'rockspaperandscissors'], pass_context=True)
     async def rockpaperscissors(self, ctx, your_choice):
         your_choice = your_choice.lower()[:1]
         if your_choice not in  ('r', 'p', 's'):
             await self.bot.say('This is a ***serious*** game! Choose out of R/rock P/paper S/scissors')
             return
         user = ctx.message.author
-        bot_choice = r.choice(['r', 'p', 's'])
-        if bot_choice == your_choice:
-            await self.bot.say('We\'re tied {}!'.format(user.mention))
-        elif self.rps_conditions[(bot_choice, your_choice)]:
+        bot_choice = r.choice([('r', 'rock'), ('p', 'paper'), ('s', 'scissors')])
+        if bot_choice[0] == your_choice:
+            await self.bot.say('I had {}! We\'re tied {}!'.format(bot_choice[1], user.mention))
+        elif not self.rps_conditions[(bot_choice[0], your_choice)]:
             self._cdb.win_bet(user.id)
-            await self.bot.say('You won {}:dollar: {}'.format(self._cdb.get_bet(user.id), user.mention))
+            await self.bot.say('I had {}! You won {}:dollar: {}'.format(bot_choice[1], self._cdb.get_bet(user.id), user.mention))
         else:
             self._cdb.lose_bet(user.id)
-            await self.bot.say('You lost {}:dollar: {}'.format(self._cdb.get_bet(user.id), user.mention))
+            await self.bot.say('I had {}! You lost {}:dollar: {}'.format(bot_choice[1], self._cdb.get_bet(user.id), user.mention))
 
 def setup(bot):
     bot.add_cog(Casino(bot))
