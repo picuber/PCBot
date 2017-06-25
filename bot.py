@@ -7,27 +7,41 @@ import logging
 import sys
 import os
 
+if len(sys.argv) >= 2:
+    config_name = sys.argv[1]
+else:
+    config_name = 'bot'
+
 logging.basicConfig(
         level=logging.INFO,
-        filename='PCBot.log',
+        filename= config_name + '.log',
         filemode='a',
         format='%(asctime)s [%(levelname)s]-%(name)s: %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S')
 logging.getLogger('discord').setLevel(logging.WARNING)
-log = logging.getLogger('PCBot')
+log = logging.getLogger(config_name)
 
-def load_startup():
-    if not os.path.isfile('startup.json'):
-        startup = {'prefix': ',', 'help_attrs': {}, 'cogs': ['cogs.core']}
-        with open('startup.json', 'w') as f:
-            json.dump(startup, f)
-        return startup
+def create_config_template(filename):
+    config = {'prefix': ',',
+            'help_attrs': {},
+            'cogs': ['cogs.core'],
+            'client_id': '000',
+            'token': 'Abc123',
+            'owner_id': '000'}
+    with open(filename, 'w') as f:
+        json.dump(config, f)
+    log.critical('Could not load {}. Template created. Exiting...'.format(filename))
+    exit(-1)
+
+def load_config(filename):
+    if not os.path.isfile(filename):
+        create_config_template(filename)
     else:
-        with open('startup.json') as f:
+        with open(filename) as f:
             return json.load(f)
 
-startup = load_startup()
-bot = commands.Bot(command_prefix=startup['prefix'], help_attrs=startup['help_attrs'])
+config = load_config(config_name + '-config.json')
+bot = commands.Bot(command_prefix=config['prefix'], help_attrs=config['help_attrs'])
 
 @bot.event
 async def on_command_error(error, ctx):
@@ -83,40 +97,20 @@ async def on_message(message):
             log.info('Message in {0.server.name}/#{0.channel.name} from {0.author.name} ({0.author.id}): {0.content}'.format(message))
     await bot.process_commands(message)
 
-def create_credentials_template(filename):
-    credentials = {'client_id': '000', 'token': 'Abc123', 'owner_id': '000'}
-    with open(filename, 'w') as f:
-        json.dump(credentials, f)
-    log.critical('Could not load {}. Template created. Exiting...'.format(filename))
-    exit(-1)
-
-def load_credentials(filename):
-    if not os.path.isfile(filename):
-        create_credentials_template(filename)
-    else:
-        with open(filename) as f:
-            return json.load(f)
-
 if __name__ == '__main__':
-    creds_file_template = 'credentials{}.json'
-    if len(sys.argv) >= 2:
-        creds_file = creds_file_template.format('-' + sys.argv[1])
-    else:
-        creds_file = creds_file_template.format('')
+    bot.config_name = config_name
+    bot.logger = log
+    bot.client_id = config['client_id']
+    bot.owner_id = config['owner_id']
 
-    credentials = load_credentials(creds_file)
-
-    bot.client_id = credentials['client_id']
-    bot.owner_id = credentials['owner_id']
-
-    for cog in startup['cogs']:
+    for cog in config['cogs']:
         try:
             bot.load_extension(cog)
         except Exception as e:
             log.error('Failed to load extention {}\n{}: {}'.format(cog, type(e).__name__, e))
 
     try:
-        bot.run(credentials['token'])
+        bot.run(config['token'])
     except discord.errors.LoginFailure as e:
-        log.critical('Could not log in. Check your credentials in {}!'.format(creds_file))
+        log.critical('Could not log in. Check your config in {}!'.format(config_name + '-config.json'))
         exit(-1)

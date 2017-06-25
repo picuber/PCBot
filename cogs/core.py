@@ -3,11 +3,11 @@ import discord
 from cogs.utils.checks import is_owner
 import logging
 
-log = logging.getLogger('PCBot.core')
-
 class Core:
     def __init__(self, bot):
+        global log
         self.bot = bot
+        log = bot.logger.getChild('core')
 
     @commands.command(help='Bring PCBot to ***your*** guild', hidden=True, aliases=['invite'])
     @is_owner()
