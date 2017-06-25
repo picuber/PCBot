@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 -u bot.py >> log 2>&1 &
+python3 -u bot.py $1 >> log 2>&1 &
