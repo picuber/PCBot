@@ -93,7 +93,10 @@ class Casino:
 
     @casino.command(help='So, you wanna gamble?', aliases=['reg'], pass_context=True)
     async def register(self, ctx):
-        user = ctx.message.author
+        if ctx.message.mentions == []:
+            user = ctx.message.author
+        else:
+            user = ctx.message.mentions[0]
         if self._cdb.register(user.id):
             await self.bot.say('You have now been registered {}'.format(user.mention))
         else:
