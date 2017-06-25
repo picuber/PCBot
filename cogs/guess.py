@@ -1,8 +1,12 @@
 from discord.ext import commands
 import random
 import json
+import os
 
 def load():
+    if not os.path.isfile('cogs/guess.json'):
+        guess = {'integer': {'min': 0, 'max': 99}, 'float': {'min': 0, 'max': 10}}
+        store(guess)
     with open('cogs/guess.json') as f:
         return json.load(f)
 

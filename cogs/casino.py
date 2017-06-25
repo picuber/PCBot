@@ -1,10 +1,14 @@
 from discord.ext import commands
 from cogs.utils.checks import *
 import json
+import os
 import random as r
 
 def load_casino():
-    with open('cogs/casino.json') as f:
+    if not os.path.isfile('cogs/casino.json'):
+        return {}
+    else:
+        with open('cogs/casino.json') as f:
             return json.load(f)
 
 def store_casino(db):

@@ -5,6 +5,7 @@ import datetime
 import json
 import logging
 import sys
+import os
 
 logging.basicConfig(
         level=logging.INFO,
@@ -16,8 +17,14 @@ logging.getLogger('discord').setLevel(logging.WARNING)
 log = logging.getLogger('PCBot')
 
 def load_startup():
-    with open('startup.json') as f:
-        return json.load(f)
+    if not os.path.isfile('startup.json'):
+        startup = {'prefix': ',', 'cogs': ['cogs.core']}
+        with open('startup.json', 'w') as f:
+            json.dump(startup, f)
+        return startup
+    else:
+        with open('startup.json') as f:
+            return json.load(f)
 
 startup = load_startup()
 bot = commands.Bot(command_prefix=startup['prefix'], help_attr=startup['help_attrs'])
@@ -77,8 +84,16 @@ async def on_message(message):
     await bot.process_commands(message)
 
 def load_credentials():
-    with open('credentials.json') as f:
-        return json.load(f)
+    if not os.path.isfile('credentials.json'):
+        credentials = {'client_id': '000', 'token': 'Abc123', 'owner_id': '000'}
+        with open('credentials.json', 'w') as f:
+            json.dump(credentials, f)
+        log.critical('Could not load credentials. Template created. Exiting...')
+        print('Could not load credentials. Template created. Exiting...')
+        exit(-1)
+    else:
+        with open('credentials.json') as f:
+            return json.load(f)
 
 if __name__ == '__main__':
     credentials = load_credentials()
