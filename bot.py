@@ -18,7 +18,7 @@ log = logging.getLogger('PCBot')
 
 def load_startup():
     if not os.path.isfile('startup.json'):
-        startup = {'prefix': ',', 'cogs': ['cogs.core']}
+        startup = {'prefix': ',', 'help_attrs': {}, 'cogs': ['cogs.core']}
         with open('startup.json', 'w') as f:
             json.dump(startup, f)
         return startup
@@ -27,7 +27,7 @@ def load_startup():
             return json.load(f)
 
 startup = load_startup()
-bot = commands.Bot(command_prefix=startup['prefix'], help_attr=startup['help_attrs'])
+bot = commands.Bot(command_prefix=startup['prefix'], help_attrs=startup['help_attrs'])
 
 @bot.event
 async def on_command_error(error, ctx):
