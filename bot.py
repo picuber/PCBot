@@ -83,20 +83,26 @@ async def on_message(message):
             log.info('Message in {0.server.name}/#{0.channel.name} from {0.author.name} ({0.author.id}): {0.content}'.format(message))
     await bot.process_commands(message)
 
-def load_credentials():
-    if not os.path.isfile('credentials.json'):
-        credentials = {'client_id': '000', 'token': 'Abc123', 'owner_id': '000'}
-        with open('credentials.json', 'w') as f:
-            json.dump(credentials, f)
-        log.critical('Could not load credentials. Template created. Exiting...')
-        print('Could not load credentials. Template created. Exiting...')
-        exit(-1)
+def create_credentials_template(filename):
+    credentials = {'client_id': '000', 'token': 'Abc123', 'owner_id': '000'}
+    with open(filename, 'w') as f:
+        json.dump(credentials, f)
+    log.critical('Could not load {}. Template created. Exiting...'.format(filename))
+    exit(-1)
+
+def load_credentials(filename):
+    if not os.path.isfile(filename):
+        create_credentials_template(filename)
     else:
-        with open('credentials.json') as f:
+        with open(filename) as f:
             return json.load(f)
 
 if __name__ == '__main__':
-    credentials = load_credentials()
+    credentials_filename = 'credentials{}.json'
+    if len(sys.argv) >= 2:
+        credentials_filename.format('-' + sys.argv[1])
+
+    credentials = load_credentials(credentials_filename.format(''))
 
     bot.client_id = credentials['client_id']
     bot.owner_id = credentials['owner_id']
