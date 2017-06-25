@@ -98,11 +98,13 @@ def load_credentials(filename):
             return json.load(f)
 
 if __name__ == '__main__':
-    credentials_filename = 'credentials{}.json'
+    creds_file_template = 'credentials{}.json'
     if len(sys.argv) >= 2:
-        credentials_filename.format('-' + sys.argv[1])
+        creds_file = creds_file_template.format('-' + sys.argv[1])
+    else:
+        creds_file = creds_file_template.format('')
 
-    credentials = load_credentials(credentials_filename.format(''))
+    credentials = load_credentials(creds_file)
 
     bot.client_id = credentials['client_id']
     bot.owner_id = credentials['owner_id']
@@ -113,4 +115,8 @@ if __name__ == '__main__':
         except Exception as e:
             log.error('Failed to load extention {}\n{}: {}'.format(cog, type(e).__name__, e))
 
-    bot.run(credentials['token'])
+    try:
+        bot.run(credentials['token'])
+    except discord.errors.LoginFailure as e:
+        log.critical('Could not log in. Check your credentials in {}!'.format(creds_file))
+        exit(-1)
