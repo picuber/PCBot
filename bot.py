@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from cogs.utils.checks import is_owner
+from cogs.utils.checks import is_owner, set_owner_id
 import datetime
 import json
 import logging
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     bot.client_id = config['client_id']
     bot.owner_id = config['owner_id']
 
-    cogs.utils.checks.set_owner_id(bot.owner_id)
+    set_owner_id(bot.owner_id)
 
     for cog in config['cogs']:
         try:
