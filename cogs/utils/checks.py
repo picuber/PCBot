@@ -1,6 +1,11 @@
 from discord.ext import commands
 
+_owner_id = None
+
+def set_owner_id(id):
+    _owner_id = id
+
 def is_owner():
     def predicate(ctx):
-        return ctx.message.author.id == '223037287179616266'
+        return _owner_id != None and ctx.message.author.id == _owner_id
     return commands.check(predicate)

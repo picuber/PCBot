@@ -103,6 +103,8 @@ if __name__ == '__main__':
     bot.client_id = config['client_id']
     bot.owner_id = config['owner_id']
 
+    cogs.utils.checks.set_owner_id(bot.owner_id)
+
     for cog in config['cogs']:
         try:
             bot.load_extension(cog)
