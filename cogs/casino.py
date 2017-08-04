@@ -111,7 +111,10 @@ class Casino:
     @casino.group(help='Check your credit card :credit_card:', aliases=['bal'], pass_context=True)
     async def balance(self, ctx):
         if ctx.invoked_subcommand is None or ctx.invoked_subcommand.name == 'balance':
-            user = ctx.message.author
+            if ctx.message.mentions == []:
+                user = ctx.message.author
+            else:
+                user = ctx.message.mentions[0]
             await self.bot.say('{}\'s balance: {}:dollar:'.format(user.mention, self._cdb.get_bal(user.id)))
 
     @balance.command(hidden=True, aliases=['s'], pass_context=True)
@@ -137,12 +140,18 @@ class Casino:
     @casino.group(help='What are you willing to bet?', pass_context=True)
     async def bet(self, ctx):
         if ctx.invoked_subcommand is None or ctx.invoked_subcommand.name == 'bet':
-            user = ctx.message.author
+            if ctx.message.mentions == []:
+                user = ctx.message.author
+            else:
+                user = ctx.message.mentions[0]
             await self.bot.say('Your current bet is {}:dollar: {}'.format(self._cdb.get_bet(user.id), user.mention))
 
     @bet.command(name='set', help='Change your bet', aliases=['s'], pass_context=True)
     async def set_bet(self, ctx, bet:int=5):
-        user = ctx.message.author
+        if ctx.message.mentions == []:
+            user = ctx.message.author
+        else:
+            user = ctx.message.mentions[0]
         self._cdb.set_bet(user.id, bet)
         await self.bot.say('Your bet has been set to {}:dollar: {}'.format(self._cdb.get_bet(user.id), user.mention))
 
