@@ -171,11 +171,11 @@ class Casino:
         if bot_choice[0] == your_choice:
             await self.bot.say('I had {}! We\'re tied {}!'.format(bot_choice[1], user.mention))
         elif not self.rps_conditions[(bot_choice[0], your_choice)]:
+            await self.bot.say('I had {}! You win {}:dollar: {}'.format(bot_choice[1], self._cdb.get_bet(user.id), user.mention))
             self._cdb.win_bet(user.id)
-            await self.bot.say('I had {}! You won {}:dollar: {}'.format(bot_choice[1], self._cdb.get_bet(user.id), user.mention))
         else:
+            await self.bot.say('I had {}! You lose {}:dollar: {}'.format(bot_choice[1], self._cdb.get_bet(user.id), user.mention))
             self._cdb.lose_bet(user.id)
-            await self.bot.say('I had {}! You lost {}:dollar: {}'.format(bot_choice[1], self._cdb.get_bet(user.id), user.mention))
 
 def setup(bot):
     bot.add_cog(Casino(bot))
