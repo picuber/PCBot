@@ -148,10 +148,7 @@ class Casino:
 
     @bet.command(name='set', help='Change your bet', aliases=['s'], pass_context=True)
     async def set_bet(self, ctx, bet:int=5):
-        if ctx.message.mentions == []:
-            user = ctx.message.author
-        else:
-            user = ctx.message.mentions[0]
+        user = ctx.message.author
         self._cdb.set_bet(user.id, bet)
         await self.bot.say('Your bet has been set to {}:dollar: {}'.format(self._cdb.get_bet(user.id), user.mention))
 
