@@ -2,6 +2,7 @@ from discord.ext import commands
 import discord
 from cogs.utils.checks import is_owner
 import logging
+import os
 
 class Core:
     def __init__(self, bot):
@@ -19,7 +20,7 @@ class Core:
     async def killbot(self):
         log.info('Killing PCBot...')
         await self.bot.say('Good bye cruel world!')
-        exit()
+        os._exit(0)
 
     @commands.command(help='Load a module', hidden=True)
     @is_owner()
