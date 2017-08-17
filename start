@@ -14,4 +14,4 @@ python3 -u bot.py $1 >> log 2>&1 &
 	done
 done
 
-echo Exiting restart loop...
+echo Exiting restart loop... >> log 
