@@ -1,2 +1,17 @@
 #!/bin/bash
+
+RESTART=1 #1=restart, 0=exit
+
+while [ $RESTART -ne 0 ]; do
+RESTART=0
+
 python3 -u bot.py $1 >> log 2>&1 &
+
+	for job in `jobs -p`
+	do
+		echo Waiting for PCBot with PID $job >> log
+		wait $job || let "RESTART=1"
+	done
+done
+
+echo Exiting restart loop...
