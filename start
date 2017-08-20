@@ -9,9 +9,9 @@ python3 -u bot.py $1 >> log 2>&1 &
 
 	for job in `jobs -p`
 	do
-		echo Waiting for PCBot with PID $job >> log
+		echo \[$(date +"%F %T")\] Waiting for PCBot with PID $job >> log
 		wait $job || let "RESTART=1"
 	done
 done
 
-echo Exiting restart loop... >> log 
+echo \[$(date +"%F %T")\] Exiting restart loop... >> log 
