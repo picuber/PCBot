@@ -3,9 +3,6 @@
 name="${1:-bot}"
 norestartfile="$name.norestart"
 
-echo $name
-echo $norestartfile
-
 while true; do
 	if [ -f  $norestartfile ]; then
 		rm $norestartfile
@@ -13,7 +10,6 @@ while true; do
 
 	python3 -u bot.py $name >> log 2>&1 &
 	pid=$!
-	echo $pid
 	echo \[$(date +"%F %T")\]\[\"$name\"\] Started PCBot \[PID=$pid\] >> log
 
 	wait $pid
