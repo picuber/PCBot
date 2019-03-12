@@ -3,6 +3,7 @@ import discord
 from cogs.utils.checks import is_owner
 import logging
 import os
+from pathlib import Path
 
 class Core:
     def __init__(self, bot):
@@ -20,6 +21,7 @@ class Core:
     async def killbot(self):
         log.info('Killing PCBot...')
         await self.bot.say('Good bye cruel world!')
+        Path(self.bot.config_name + '.norestart').touch()
         os._exit(0)
 
     @commands.command(help='Load a module', hidden=True)

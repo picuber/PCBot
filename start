@@ -1,17 +1,28 @@
 #!/bin/bash
 
-RESTART=1 #1=restart, 0=exit
+name="${1:-bot}"
+norestartfile="$name.norestart"
 
-while [ $RESTART -ne 0 ]; do
-RESTART=0
+echo $name
+echo $norestartfile
 
-python3 -u bot.py $1 >> log 2>&1 &
+while true; do
+	if [ -f  $norestartfile ]; then
+		rm $norestartfile
+	fi
 
-	for job in `jobs -p`
-	do
-		echo \[$(date +"%F %T")\] Waiting for PCBot with PID $job >> log
-		wait $job || let "RESTART=1"
-	done
+	python3 -u bot.py $name >> log 2>&1 &
+	pid=$!
+	echo $pid
+	echo \[$(date +"%F %T")\]\[\"$name\"\] Started PCBot \[PID=$pid\] >> log
+
+	wait $pid
+	echo \[$(date +"%F %T")\]\[\"$name\"\] PCBot was terminated! >> log
+
+	if [ -f $norestartfile ]; then
+		echo \[$(date +"%F %T")\]\[\"$name\"\] File $norestartfile found, exiting restart loop >> log
+		break
+	fi
+
+	echo \[$(date +"%F %T")\]\[\"$name\"\] Restarting >> log
 done
-
-echo \[$(date +"%F %T")\] Exiting restart loop... >> log 
