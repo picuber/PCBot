@@ -5,7 +5,7 @@ def load_objects():
     with open('cogs/throw_objects.txt') as f:
         return [l.strip() for l in f]
 
-class Random:
+class Random(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.objects = load_objects()

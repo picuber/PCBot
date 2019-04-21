@@ -81,7 +81,7 @@ class CasinoDB:
     def win_bet(self, uid):
         self.add_bal(uid, self.get_bet(uid))
 
-class Casino:
+class Casino(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self._cdb = CasinoDB()

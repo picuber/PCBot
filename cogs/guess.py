@@ -14,7 +14,7 @@ def store(config):
     with open('cogs/guess.json','w') as f:
         json.dump(config, f)
 
-class Guess:
+class Guess(commands.Cog):
     def reload_numbers(self):
         config = load()
         self.int_min = config['integer']['min']
