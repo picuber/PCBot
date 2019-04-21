@@ -2,7 +2,7 @@ from discord.ext import commands
 import time as sys_time
 from .utils.helper import toBase
 
-class Time(commands.Cog):
+class Time:
     def __init__(self, bot):
         self.bot = bot
 

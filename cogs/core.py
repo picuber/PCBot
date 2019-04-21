@@ -5,7 +5,7 @@ import logging
 import os
 from pathlib import Path
 
-class Core(commands.Cog):
+class Core:
     def __init__(self, bot):
         global log
         self.bot = bot
