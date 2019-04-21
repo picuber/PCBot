@@ -15,7 +15,7 @@ class Time():
     async def unix(self):
         await self.bot.say(int(sys_time.time()))
 
-    @time.command(help='Leo\'s custom time system', aliases=['t', 'time', 'lt'])
+    @time.command(help='picubers\'s custom time system', aliases=['t', 'time', 'lt'])
     async def lcts(self):
         t = int(sys_time.time() + sys_time.localtime().tm_gmtoff) % 86400
         
