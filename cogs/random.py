@@ -44,8 +44,8 @@ class Random:
         await self.bot.say(str(dices_result).replace(', ', ' + ') + ' = ' + str(roll_sum))
     
     @roll.error
-    async def roll_error(error, ctx):
-        await bot.say('Please enter a dice roll')
+    async def roll_error(self, ctx, error):
+        await self.bot.say('Please enter a dice roll')
     
     @commands.command(help='In memmory of RoboNitori', pass_context=True)
     async def throw(self, ctx):
